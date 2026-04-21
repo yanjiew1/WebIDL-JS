@@ -1,8 +1,9 @@
-"use strict";
+import { describe, test } from "node:test";
+import assert from "node:assert/strict";
+import { createRequire } from "node:module";
 
-const { describe, test } = require("node:test");
-const assert = require("node:assert/strict");
-const utils = require("../lib/output/utils");
+const require = createRequire(import.meta.url);
+const utils = require("../lib/output/utils.js");
 
 describe("utils.js", () => {
   describe("isObject", () => {

@@ -12,6 +12,20 @@ export default [
   {
     files: ["**/*.js"],
     languageOptions: {
+      sourceType: "module",
+      globals: globals.node
+    }
+  },
+  {
+    files: ["**/*.cjs"],
+    languageOptions: {
+      sourceType: "commonjs",
+      globals: globals.node
+    }
+  },
+  {
+    files: ["lib/output/**/*.js"],
+    languageOptions: {
       sourceType: "commonjs",
       globals: globals.node
     }
@@ -21,7 +35,8 @@ export default [
   {
     rules: {
       "@stylistic/max-len": ["error", { code: 120, ignoreUrls: true, ignoreTemplateLiterals: true }],
-      "require-unicode-regexp": "off"
+      "require-unicode-regexp": "off",
+      "sort-imports": "off"
     }
   }
 ];

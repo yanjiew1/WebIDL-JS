@@ -1,6 +1,6 @@
-"use strict";
+const reflector = {};
 
-module.exports.boolean = {
+reflector.boolean = {
   get(implObj, attrName) {
     return `return ${implObj}.hasAttributeNS(null, "${attrName}");`;
   },
@@ -15,7 +15,7 @@ module.exports.boolean = {
   }
 };
 
-module.exports.DOMString = {
+reflector.DOMString = {
   get(implObj, attrName) {
     return `
       const value = ${implObj}.getAttributeNS(null, "${attrName}");
@@ -27,7 +27,7 @@ module.exports.DOMString = {
   }
 };
 
-module.exports.USVString = {
+reflector.USVString = {
   get(implObj, attrName) {
     return `
       const value = ${implObj}.getAttributeNS(null, "${attrName}");
@@ -39,7 +39,7 @@ module.exports.USVString = {
   }
 };
 
-module.exports.long = {
+reflector.long = {
   get(implObj, attrName) {
     return `
       const value = parseInt(${implObj}.getAttributeNS(null, "${attrName}"));
@@ -51,7 +51,7 @@ module.exports.long = {
   }
 };
 
-module.exports["unsigned long"] = {
+reflector["unsigned long"] = {
   get(implObj, attrName) {
     return `
       const value = parseInt(${implObj}.getAttributeNS(null, "${attrName}"));
@@ -62,3 +62,5 @@ module.exports["unsigned long"] = {
     return `${implObj}.setAttributeNS(null, "${attrName}", String(V > 2147483647 ? 0 : V));`;
   }
 };
+
+export default reflector;
