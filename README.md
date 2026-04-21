@@ -86,7 +86,7 @@ The above is a simplification of the actual generated code, but should give you 
 - After performing Web IDL-related processing, webidl2js delegates to the implementation class for the non-boilerplate parts of `add()`. This allows you to focus on writing the interesting parts of the implementation without worrying about types, brand-checking, parameter-processing, etc.
 - webidl2js attempts to generate informative error messages using what it knows.
 
-For more examples, you can check out the `test/` directory (with the generated output being in `test/__snapshots__`). Alternately, you can install [jsdom](https://www.npmjs.com/package/jsdom), [whatwg-url](https://www.npmjs.com/package/whatwg-url), or [domexception](https://www.npmjs.com/package/domexception) from npm and check out their source code. (Note that browsing them on GitHub will not work, as we do not check the generated files into Git, but instead generate them as part of publishing the package to npm.)
+For more examples, you can check out the `test/` directory (with the generated output being in `test/__snapshots__`). Alternately, you can install [jsdom](https://github.com/jsdom/jsdom), [whatwg-url](https://github.com/jsdom/whatwg-url), or [domexception](https://github.com/jsdom/domexception) and check out their source code. (Note that these projects generally do not check generated files into Git, but instead generate them as part of publishing to npm.)
 
 ## Wrapper class file generation API
 
@@ -109,6 +109,8 @@ The main module's default export is a class which you can construct with a few o
 
 - `implSuffix`: a suffix used, if any, to find files within the source directory based on the IDL file name
 - `suppressErrors`: set to true to suppress errors during generation
+- `outputMode`: selects the wrapper module format; use `"commonjs"` (default, alias: `"cjs"`) or `"module"` (alias:
+  `"esm"`)
 - `processCEReactions` and `processHTMLConstructor`: see below
 
 The `addSource()` method can then be called multiple times to add directories containing `.webidl` IDL files and `.js` implementation class files.
@@ -423,7 +425,7 @@ However, it is not required! The wrapper classes will have a correct inheritance
 
 ### The init export
 
-In addition to the `implementation` export, for interfaces, your implementation class file can contain an `init` export. This would be a function taking as an argument an instance of the implementation class, and is called when any wrapper/implementation pairs are constructed (such as by the exports of the [generated wrapper module](https://github.com/jsdom/webidl2js#for-interfaces)). In particular, it is called even if they are constructed by [`new()`](newglobalobject), which does not invoke the implementation class constructor.
+In addition to the `implementation` export, for interfaces, your implementation class file can contain an `init` export. This would be a function taking as an argument an instance of the implementation class, and is called when any wrapper/implementation pairs are constructed (such as by the exports of the [generated wrapper module](https://github.com/jsdom/webidl2js#for-interfaces)). In particular, it is called even if they are constructed by [`new()`](#newglobalobject-newtarget), which does not invoke the implementation class constructor.
 
 ## The generated utilities file
 

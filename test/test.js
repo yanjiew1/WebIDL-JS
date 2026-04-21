@@ -1,6 +1,7 @@
 import { before, describe, snapshot, test } from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import reflector from "./reflector.js";
@@ -18,6 +19,21 @@ const snapshotsDir = path.resolve(__dirname, "snapshots");
 const idlFiles = fs.readdirSync(casesDir);
 
 describe("generation", () => {
+  describe("output mode option", () => {
+    test("accepts aliases for commonjs and module modes", () => {
+      assert.strictEqual(new Transformer({ outputMode: "commonjs" }).outputMode, "commonjs");
+      assert.strictEqual(new Transformer({ outputMode: "cjs" }).outputMode, "commonjs");
+      assert.strictEqual(new Transformer({ outputMode: "module" }).outputMode, "module");
+      assert.strictEqual(new Transformer({ outputMode: "esm" }).outputMode, "module");
+    });
+
+    test("rejects invalid output mode", () => {
+      assert.throws(() => {
+        return Reflect.construct(Transformer, [{ outputMode: "invalid" }]);
+      }, /outputMode must be "commonjs" or "module"/u);
+    });
+  });
+
   describe("built-in types", () => {
     before(() => {
       const transformer = new Transformer();
@@ -56,6 +72,38 @@ describe("generation", () => {
         t.assert.fileSnapshot(output, path.resolve(snapshotsDir, "without-processors", `${basename}.js`));
       });
     }
+  });
+
+  describe("without processors in module output mode", () => {
+    let outputModuleDir;
+
+    before(() => {
+      const transformer = new Transformer({ outputMode: "module" });
+      transformer.addSource(casesDir, implsDir);
+      outputModuleDir = fs.mkdtempSync(path.join(os.tmpdir(), "webidl2js-output-module-"));
+
+      return transformer.generate(outputModuleDir);
+    });
+
+    test("EventTarget output uses ESM imports and exports", () => {
+      const outputFile = path.resolve(outputModuleDir, "EventTarget.js");
+      const output = fs.readFileSync(outputFile, { encoding: "utf-8" });
+
+      assert.match(output, /import conversions from "webidl-conversions";/u);
+      assert.match(output, /import \* as utils from "\.\/utils\.js";/u);
+      assert.match(output, /import \* as Impl from ".*EventTarget\.js";/u);
+      assert.match(output, /const exports = \{\};/u);
+      assert.match(output, /export default exports;/u);
+      assert.doesNotMatch(output, /require\(/u);
+    });
+
+    test("utils.js output uses ESM exports", () => {
+      const outputFile = path.resolve(outputModuleDir, "utils.js");
+      const output = fs.readFileSync(outputFile, { encoding: "utf-8" });
+
+      assert.match(output, /export default exports;/u);
+      assert.doesNotMatch(output, /module\.exports/u);
+    });
   });
 
   describe("with processors", () => {
