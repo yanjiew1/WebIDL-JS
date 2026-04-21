@@ -1,13 +1,15 @@
-"use strict";
+import { describe, test, before, snapshot } from "node:test";
+import assert from "node:assert/strict";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
-const { describe, test, before, snapshot } = require("node:test");
-const assert = require("node:assert/strict");
-const fs = require("fs");
-const path = require("path");
+import Transformer from "../lib/transformer.js";
+import reflector from "./reflector.js";
+
+const __dirname = fileURLToPath(new URL(".", import.meta.url));
 
 snapshot.setDefaultSnapshotSerializers([value => value]);
-const Transformer = require("..");
-const reflector = require("./reflector");
 
 const rootDir = path.resolve(__dirname, "..");
 const casesDir = path.resolve(__dirname, "cases");

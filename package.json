@@ -2,6 +2,7 @@
   "name": "webidl2js",
   "version": "20.0.0",
   "description": "Auto-generates class structures for WebIDL specifications",
+  "type": "module",
   "main": "lib/transformer.js",
   "files": [
     "lib/"

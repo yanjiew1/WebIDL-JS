@@ -1,8 +1,6 @@
-"use strict";
-
-const { describe, test } = require("node:test");
-const assert = require("node:assert/strict");
-const utils = require("../lib/output/utils");
+import { describe, test } from "node:test";
+import assert from "node:assert/strict";
+import utils from "../lib/output/utils.js";
 
 describe("utils.js", () => {
   describe("isObject", () => {
