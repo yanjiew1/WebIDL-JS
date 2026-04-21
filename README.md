@@ -25,10 +25,10 @@ exports.implementation = class SomeInterfaceImpl {
 will generate a JavaScript wrapper class file roughly like this:
 
 ```js
-const conversions = require("webidl-conversions");
-const { implSymbol, ctorRegistrySymbol } = require("./utils.js");
+import conversions from "webidl-conversions";
+import { implSymbol, ctorRegistrySymbol } from "./utils.js";
 
-const Impl = require("./SomeInterface-impl.js").implementation;
+import Impl from "./SomeInterface-impl.js";
 
 class SomeInterface {
   constructor() {
@@ -94,7 +94,7 @@ A typical Node.js script that compiles IDL using webidl2js looks like the follow
 
 ```js
 "use strict";
-const WebIDL2JS = require("webidl2js");
+import WebIDL2JS from "webidl2js";
 
 const transformer = new WebIDL2JS({ implSuffix: "-impl" });
 
@@ -147,12 +147,12 @@ An example of code that uses these hooks is as follows:
 
 ```js
 "use strict";
-const WebIDL2JS = require("webidl2js");
+import WebIDL2JS from "webidl2js";
 
 const transformer = new WebIDL2JS({
   implSuffix: "-impl",
   processCEReactions(code) {
-    // Add `require("../ce-reactions")` to generated file.
+    // Add an import from `../ce-reactions` to generated file.
     const ceReactions = this.addImport("../ce-reactions");
 
     return `
@@ -165,7 +165,7 @@ const transformer = new WebIDL2JS({
     `;
   },
   processHTMLConstructor(/* code */) {
-    // Add `require("../HTMLConstructor").HTMLConstructor` to generated file.
+    // Add a named import from `../HTMLConstructor` to generated file.
     const htmlConstructor = this.addImport("../HTMLConstructor", "HTMLConstructor");
 
     return `
