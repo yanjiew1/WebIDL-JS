@@ -109,6 +109,8 @@ The main module's default export is a class which you can construct with a few o
 
 - `implSuffix`: a suffix used, if any, to find files within the source directory based on the IDL file name
 - `suppressErrors`: set to true to suppress errors during generation
+- `outputMode`: selects the wrapper module format; use `"commonjs"` (default, alias: `"cjs"`) or `"module"` (alias:
+  `"esm"`)
 - `processCEReactions` and `processHTMLConstructor`: see below
 
 The `addSource()` method can then be called multiple times to add directories containing `.webidl` IDL files and `.js` implementation class files.
